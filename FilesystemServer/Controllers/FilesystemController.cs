@@ -16,6 +16,8 @@ public class FilesystemController : ControllerBase
     [HttpGet()]
     public IEnumerable<string> Get(string path)
     {
+        this._logger.LogInformation($"Somebody is asking for {path} directory.");
+
         var directories = Directory.GetDirectories(path);
         var files = Directory.GetFiles(path);
         var result = directories.Concat(files);
@@ -25,6 +27,8 @@ public class FilesystemController : ControllerBase
     [HttpGet("File")]
     public string GetFile(string path)
     {
+        this._logger.LogInformation($"Somebody is getting for {path} file.");
+
         var body = System.IO.File.ReadAllText(path);
         return body;
     }
@@ -32,6 +36,8 @@ public class FilesystemController : ControllerBase
     [HttpPut("File")]
     public void PutFile(string path, [FromBody] string text)
     {
+        this._logger.LogInformation($"Somebody is editting {path} file.");
+
         System.IO.File.WriteAllText(path, text);
     }
 }
