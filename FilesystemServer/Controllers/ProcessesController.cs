@@ -36,11 +36,11 @@ public class ProcessesController : ControllerBase
     }
 
     [HttpPost("Process")]
-    public ProcessDto PostProcess(string command)
+    public ProcessDto PostProcess(string command, string args)
     {
         this._logger.LogInformation($"Somebody is starting the process with the command: {command}.");
 
-        var process = Process.Start(command);
+        var process = Process.Start(command, args);
         return new ProcessDto { Id = process.Id, Name = process.ProcessName };
     }
 }

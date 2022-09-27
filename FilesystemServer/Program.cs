@@ -26,4 +26,10 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+app.UseRouting();
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Performance}/{action=GetStats}/{id?}");
+
+
 app.Run();
