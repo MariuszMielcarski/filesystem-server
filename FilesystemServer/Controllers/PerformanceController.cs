@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FilesystemServer.Controllers;
@@ -14,17 +15,25 @@ public class PerformanceController : ControllerBase
 
     public IActionResult GetStats()
     {
+        const string NotSupported = "NotSupported";
+
         Response.Headers.Add("Refresh", "5");
 
-        var processor = new PerformanceCounter("Processor", "% Processor Time", "_Total");
-        var memory = new PerformanceCounter("Memory", "Available MBytes");
+        object? processor = null;
+        object? memory = null;
+
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            processor = new PerformanceCounter("Processor", "% Processor Time", "_Total").NextValue();
+            memory = new PerformanceCounter("Memory", "Available MBytes").NextValue();
+        }
         
         DriveInfo[] allDrives = DriveInfo.GetDrives();
 
         var response = new
         { 
-            Processor = processor.NextValue(),
-            Memory = memory.NextValue(),
+            Processor = processor ?? NotSupported,
+            Memory = memory ?? NotSupported,
             Drives = allDrives.Select(x => new
             {
                 x.Name,
