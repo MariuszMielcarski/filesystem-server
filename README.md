@@ -11,3 +11,4 @@ dotnet new webapi
 
 dotnet run
 
+dotnet dev-certs https --trust
