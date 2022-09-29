@@ -5,8 +5,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Host.UseSerilog(
     (hostContext, services, configuration) => configuration
+    .Enrich.WithThreadId()
+    .Enrich.WithClientIp()
     .WriteTo.Console()
-    .WriteTo.File("log.txt"));
+    .WriteTo.File("log.txt",
+        outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} Thread: {ThreadId} Client: {ClientIp} [{Level:u3}] {Message:lj} Properties:{Properties}{NewLine}{Exception}"));
 
 // Add services to the container.
 
@@ -17,7 +20,8 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// app.UseMiddleware<BasicAuthMiddleware>();
+app.UseMiddleware<BasicAuthMiddleware>();
+app.UseMiddleware<IpFilterMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
