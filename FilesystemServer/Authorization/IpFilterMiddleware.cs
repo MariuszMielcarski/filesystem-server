@@ -21,6 +21,7 @@ public class IpFilterMiddleware
 
         if (!AllowedIps.Contains(ip))
         {
+            await context.Response.WriteAsync("Jesteś zbanowan kolego.");
             return;
         }
 
