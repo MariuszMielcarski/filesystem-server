@@ -1,6 +1,12 @@
 using FilesystemServer.Authorization;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Host.UseSerilog(
+    (hostContext, services, configuration) => configuration
+    .WriteTo.Console()
+    .WriteTo.File("log.txt"));
 
 // Add services to the container.
 
